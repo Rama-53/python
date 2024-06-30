@@ -1,0 +1,60 @@
+def main():
+    p1=read_poly()
+    p2=read_poly()
+    res=add_poly(p1,p2)
+    print(get_poly_expression(res))
+
+def read_poly():
+    n=int(input())
+    poly_dict={}
+    for i in range(n):
+        power,coeff=map(int,input().split())
+        poly_dict[power]=coeff
+    return poly_dict
+    
+    
+def add_poly(p1,p2):
+    res=dict()
+    for power in (set(p1.keys())|set(p2.keys())):
+        res[power]=get_coeff(power,p1)+get_coeff(power,p2)
+    return res
+
+def get_coeff(power,poly):
+    try:
+        return poly[power]
+    except KeyError:
+        return 0
+
+def get_poly_expression(poly):
+    expression=""
+    degree=max(poly.keys())
+    for power in sorted(poly.keys(),reverse=True):
+        coeff=poly[power]
+        term=get_term(coeff,power)
+        if power==degree:
+            if coeff > 0:
+                expression=term 
+            elif coeff <0:
+                expression="-{}".format(term)
+        else:
+            if coeff >0:
+                expression="{} + {}".format(expression,term)    
+            elif coeff <0:
+                expression="{} - {}".format(expression,term)
+    if expression=="":
+        return 0
+    return expression
+    
+def get_term(coeff,power):
+    coeff=abs(coeff)
+    if coeff==1 and power!=0:
+        coeff=""
+    if power >1:
+        term="{}x^{}".format(coeff,power)
+    elif power ==1:
+        term="{}x".format(coeff)
+    elif power==0:
+        term="{}".format(coeff)
+    return term
+    
+main()
